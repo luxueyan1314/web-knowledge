@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>自定义Promise</title>
+</head>
+
+<body>
+
+    <script src="./Promise.js"></script>
+    <script>
+        var p1 = Promise.resolve(1)
+        var p2 = Promise.resolve(Promise.resolve(2))
+        var p3 = Promise.resolve(Promise.reject(4))
+
+        Promise.race([p2, p3, p1]).then(value => {
+                console.log(value)
+            }).catch(reason => {
+                console.log("执行失败", reason)
+            })
+            // Promise.all([p1, p2, p3]).then(value => {
+            //     console.log(value)
+            // }).catch(reason => {
+            //     console.log("执行失败", reason)
+            // })
+
+
+        // p1.then((value) => {
+        //     console.log("resolved===p1-------", value)
+        //     return new Promise((reslove, reject) => {
+        //         setTimeout(() => {
+        //             reslove(2)
+        //         }, 100)
+        //     })
+        // }).then(value => {
+        //     console.log("resolved2-------", value)
+        // }).catch(reason => {
+        //     console.log("reject1-------", reason)
+        // })
+
+
+        // p2.then((value) => {
+        //     console.log("resolved===p2-------", value)
+        // })
+
+        // p3.catch(reason => {
+        //     console.log("rejected===p3-------", reason)
+        // })
+    </script>
+
+</body>
+
+</html>
