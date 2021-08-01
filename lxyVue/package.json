@@ -1,0 +1,19 @@
+{
+  "name": "lxyvue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server"
+  },
+  "author": "lxy",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.40.0",
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "dependencies": {
+    "snabbdom": "^3.0.3"
+  }
+}
