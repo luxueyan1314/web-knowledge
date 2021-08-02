@@ -1,3 +1,5 @@
+import creatElement from "./creatElement";
+
 export default function patchVnode(newNode, oldNode){
 /**命中规则:
  * 1.新前旧前
@@ -12,7 +14,7 @@ export default function patchVnode(newNode, oldNode){
   newChildren = newNode.children,
   oldChildren = oldNode.children
 
-  while(newBeforeIndex < newAfterIndex && oldBeforeIndex < oldAfterIndex){
+  while(newBeforeIndex <= newAfterIndex && oldBeforeIndex <= oldAfterIndex){
     // 新前旧前
     if(isEqualVnode(newChildren[newBeforeIndex], oldChildren[oldBeforeIndex]) ){
         newBeforeIndex++;
@@ -34,6 +36,16 @@ export default function patchVnode(newNode, oldNode){
         
     }
   }
+
+  //旧节点指针先循环完，新节点前后指针之间为插入
+  if(oldBeforeIndex < oldAfterIndex && newBeforeIndex >= newAfterIndex ){
+      let len = (newAfterIndex - newBeforeIndex) + 1
+      for(let i = 0; i < len; i++){
+        let newElm = creatElement(newChildren[newBeforeIndex+i])
+        oldNode.elm.appendChild(newElm);
+    }
+  }
+
 }
 
 

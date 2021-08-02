@@ -7,9 +7,12 @@ export default function creatElement(vnode){
   //如果有文本，并无自节点
   if(vnode.text != '' && (vnode.children == undefined || !vnode.children) ){
     domnode.innerText = vnode.text
-    vnode.elm = domnode
   }else if(Array.isArray(vnode.children) && vnode.children.length){
-    
+    for(let i = 0; i < vnode.children.length; i++){
+     let chNode = creatElement(vnode.children[i])
+     domnode.appendChild(chNode)
+    }
   }
-  return vnode
+  vnode.elm = domnode
+  return vnode.elm
 }

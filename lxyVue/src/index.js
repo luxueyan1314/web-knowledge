@@ -1,15 +1,21 @@
 import patch from './public/patch'
 import h from './public/h';
 let vNode = h('ul', {}, 'aa'),
-oldNode = h('ul', {}, [
-  h("li", {}, "文字1"),
-  h("li", {}, "文字2")
+oldNode1 = h('ul', {}, [
+  h("li", {}, "A"),
+  h("li", {}, "B")
 ]), 
-container = document.getElementById("container"),
+oldNode2 = h('ul', {}, [
+  h("li", {}, "A"),
+  h("li", {}, "B"),
+  h("li", {}, "C"),
+  h("li", {}, "D")
+]), 
+view = document.getElementById("view"),
 button =  document.getElementById("handleNode")
 
-patch(container, vNode)
+patch(view, oldNode1)
 
 button.onclick = function(){
-  patch(vNode, oldNode)
+  patch(oldNode1, oldNode2)
 }
