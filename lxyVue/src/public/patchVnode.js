@@ -42,10 +42,10 @@ export default function patchVnode(newNode, oldNode){
       let len = (newAfterIndex - newBeforeIndex) + 1
       for(let i = 0; i < len; i++){
         let newElm = creatElement(newChildren[newBeforeIndex+i])
-        console.log("newElm----", newElm)
-        // oldNode.elm.appendChild(newElm);
+        oldNode.elm.appendChild(newElm);
     }
   }
+  // else if(){}
 
 }
 

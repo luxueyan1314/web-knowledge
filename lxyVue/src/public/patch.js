@@ -17,9 +17,9 @@ export default function patch(oldNode, newNode){
       }
     }else{
       //清空
-      oldNode.elm.innerHTML= ""
       //有子节点并且判断子节点是否相同
       if(newNode.children && !oldNode.children){
+        oldNode.elm.innerHTML= ""
         for(let item of newNode.children){
           let chDom = creatElement(item)
           oldNode.elm.appendChild(chDom)
