@@ -8,8 +8,8 @@ export default function patchVnode(newNode, oldNode){
  * 4.新后旧前
  * **/
   let newBeforeIndex = 0,
-  newAfterIndex = 0,
-  oldBeforeIndex = newNode.children.length - 1,
+  newAfterIndex = newNode.children.length - 1,
+  oldBeforeIndex = 0,
   oldAfterIndex = oldNode.children.length - 1,
   newChildren = newNode.children,
   oldChildren = oldNode.children
@@ -36,13 +36,14 @@ export default function patchVnode(newNode, oldNode){
         
     }
   }
-
+  console.log(`oldBeforeIndex=${oldBeforeIndex}; oldAfterIndex=${oldAfterIndex}, newBeforeIndex=${newBeforeIndex}, newAfterIndex=${newAfterIndex}`)
   //旧节点指针先循环完，新节点前后指针之间为插入
-  if(oldBeforeIndex < oldAfterIndex && newBeforeIndex >= newAfterIndex ){
+  if(oldBeforeIndex > oldAfterIndex &&  newAfterIndex >= newBeforeIndex ){
       let len = (newAfterIndex - newBeforeIndex) + 1
       for(let i = 0; i < len; i++){
         let newElm = creatElement(newChildren[newBeforeIndex+i])
-        oldNode.elm.appendChild(newElm);
+        console.log("newElm----", newElm)
+        // oldNode.elm.appendChild(newElm);
     }
   }
 
