@@ -25,15 +25,15 @@ export default function patchVnode(newNode, oldNode){
       oldAfterIndex--
     }else if(isEqualVnode(newChildren[newBeforeIndex],oldChildren[oldAfterIndex])){
       //新前旧后
-      // 将新后全部元素挪到新前前面，继续匹配
-      newChildren.unshift(oldChildren[oldAfterIndex])
+      // 将新后全部元素挪到旧前前面，继续匹配
+      oldChildren.unshift(newChildren)
     }else if(isEqualVnode(newChildren[newAfterIndex], oldChildren[oldBeforeIndex])){
       //新后旧后
       // 将新后全部元素挪到旧后后面，继续匹配
-
+      oldChildren.push(newChildren)
     }else{
       //循环查找有无相同，有相同置为undefined
-        
+      
     }
   }
   console.log(`oldBeforeIndex=${oldBeforeIndex}; oldAfterIndex=${oldAfterIndex}, newBeforeIndex=${newBeforeIndex}, newAfterIndex=${newAfterIndex}`)
