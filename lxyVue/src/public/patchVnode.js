@@ -36,7 +36,7 @@ export default function patchVnode(newNode, oldNode) {
       // 旧前节点置为undefined
       let newElm = creatElement(newChildren[newAfterIndex])
       let lever = oldChildren[oldAfterIndex].elm;
-      oldNode.elm.insertAfter(newElm,lever);
+      oldNode.elm.insertBefore(newElm,lever.nextSibling);
       oldChildren[oldBeforeIndex] = undefined;
       newAfterIndex--;
     } else if (
@@ -51,6 +51,7 @@ export default function patchVnode(newNode, oldNode) {
       let lever = oldChildren[oldBeforeIndex].elm;
       oldNode.elm.insertBefore(newElm,lever);
       oldChildren[oldAfterIndex] = undefined;
+
       newBeforeIndex++;
 
     } else {
@@ -58,10 +59,10 @@ export default function patchVnode(newNode, oldNode) {
       let index = oldChildren.findIndex(item=>{
         return isEqualVnode(newChildren[newBeforeIndex], item)
       })
-      console.log("index----------", index)
-      if(index > -1){
-        oldChildren[index] = undefined
-      }
+      // if(index > -1){
+      //   // oldNode.elm.removeChild(oldChildren[index].elm);
+      //   oldChildren[index] = undefined
+      // }
       let newElm = creatElement(newChildren[newBeforeIndex])
       let lever = oldChildren[oldBeforeIndex].elm;
       oldNode.elm.insertBefore(newElm,lever);
@@ -90,7 +91,7 @@ export default function patchVnode(newNode, oldNode) {
 }
 
 function isEqualVnode(newNode, oldNode) {
-  if (oldNode.key === newNode.key && oldNode.sel === newNode.sel && oldNode.text === newNode.text ) {
+  if ((oldNode.key&&newNode.key&&oldNode.key === newNode.key) && oldNode.sel === newNode.sel && oldNode.text === newNode.text ) {
     return true;
   } else {
     return false;
