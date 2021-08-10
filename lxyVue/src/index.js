@@ -5,11 +5,13 @@ oldNode1 = h('ul', {}, [
   h("li", {}, "A"),
   h("li", {}, "B"),
   h("li", {}, "C"),
-  h("li", {}, "D")
+  h("li", {}, "D"),
+  h("li", {}, "E")
 ]), 
 oldNode2 = h('ul', {}, [
   h("li", {}, "A"),
   h("li", {}, "B"),
+  h("li", {}, "D"),
 ]), 
 view = document.getElementById("view"),
 button =  document.getElementById("handleNode")
