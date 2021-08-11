@@ -2,15 +2,15 @@ import patch from './public/patch'
 import h from './public/h';
 let vNode = h('ul', {}, 'aa'),
 oldNode1 = h('ul', {}, [
-  h("li", {}, "A"),
-  h("li", {}, "B"),
-  h("li", {}, "C"),
+  h("li", {key: "A"}, "A"),
+  h("li", {key: "B"}, "B"),
+  h("li", {key: "C"}, "C"),
  
 ]), 
 oldNode2 = h('ul', {}, [
-  h("li", {}, "C"),
-  h("li", {}, "B"),
-  h("li", {}, "A"),
+  h("li", {key: "C"}, "C"),
+  h("li", {key: "E"}, "E"),
+  h("li", {key: "F"}, "F"),
 ]), 
 view = document.getElementById("view"),
 button =  document.getElementById("handleNode")
