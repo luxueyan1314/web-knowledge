@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>XMLHttpRequest</title>
+</head>
+
+<body>
+    <script>
+        var xml = new XMLHttpRequest(); //建立构造函数
+        //打开请求
+        xml.open("GET", "add.json", true)
+            //发送请求
+        xml.send()
+            //接受相应
+        xml.onreadystatechange = function() {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200 || xhr.status == 304) {
+                    console.log(xhr.responseText);
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>手写 Promise</title>
+</head>
+
+<body>
+  <img style="width: 800px;height: auto;margin:20px auto;display: block;" src="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/promises.png"/>
+  <script>
+    // 定义promise方法
+    class myPromise{
+      constructor(fn){
+        this.status = "pending" //pending, resloved, rejected
+        this.data = ""
+        this.resloveTasks = [] // 储存绑定成功函数
+        this.rejectTasks = [] // 储存绑定失败函数
+
+        const _resloveFn = (val)=>{
+          if(this.status !== "pending") return
+          this.data = val
+          this.status = "resloved"
+          setTimeout(()=>{
+            // console.log("this.resloveTasks", this.resloveTasks)
+            this.resloveTasks.forEach(cb=>{
+              console.log("resloveCb", cb)
+              cb(val)
+            })
+            // let cb 
+            // while(cb = this.rejectTasks.shift()){
+            //   console.log("resloveCb", cb)
+            //   cb(val)
+            // }
+          })
+        }
+        const _rejectFn = (val)=>{
+          if(this.status !== "pending") return
+          this.data = val
+          this.status = "rejected"
+          setTimeout(()=>{
+            // console.log("this.rejectTasks", this.rejectTasks)
+            this.rejectTasks.forEach(cb=>{
+              console.log("rejectCb", cb)
+              cb(val)
+            })
+            // let cb
+            // while(cb = this.rejectTasks.shift()){
+            //   console.log("rejectCb", cb)
+            //   cb(val)
+            // }
+          })
+        }
+        try {
+          fn(_resloveFn, _rejectFn)
+        } catch (error) {
+          _rejectFn(error)
+        }
+      }
+      then(resloveFn, rejectFn){
+        // console.log("resloveFn, rejectFn", resloveFn, rejectFn)
+        return new myPromise((reslove, reject)=>{
+            this.resloveTasks.push((val)=>{
+              if(resloveFn instanceof Function){
+                let res = resloveFn(val)
+                // 若返回值是promise类型，需排队
+                if(res instanceof myPromise){
+                  res.then(resloveFn, rejectFn)
+                } else {
+                  // 此操作用于链式调用
+                  reslove(res)
+                }
+              } else {
+                reslove(val)
+              }
+          })
+          this.rejectTasks.push((val)=>{
+            if(rejectFn instanceof Function){
+              let res = rejectFn(val)
+              if(res instanceof myPromise){
+                res.then(resloveFn, rejectFn)
+              } else {
+                reject(res)
+              }
+            } else {
+              reject(val)
+            }
+          })
+        })
+      }
+      catch(rejectFn){
+        this.then(undefined, rejectFn)
+      }
+      static reject(reason){
+        return new myPromise((reslove, reject)=>{
+          reject(reason)
+        })
+      }
+      static reslove(value){
+        return new myPromise((reslove)=>{
+          reslove(value)
+        })
+      }
+      static race(fnList){
+        return new myPromise((reslove, reject)=>{
+          for(let [i,p] of fnList.entries()){
+            p.then(val=>{
+              reslove(val)
+            }).catch(err=>{
+              reject(err)
+            })
+          }
+        })
+      }
+      static all(fnList){
+        return new myPromise((reslove, reject)=>{
+          let index = 0
+          let values = []
+          for(let [i,p] of fnList.entries()){
+            console.log(i,p)
+
+            if(! p instanceof myPromise) {
+              throw(p+'非promise')
+              return 
+            }
+            p.then(val => {
+              values[i] = val
+              index++
+              console.log("values", values)
+              if(index === fnList.length){
+                reslove(values)
+              }
+            }).catch(err => {
+              console.log("catch", err)
+              reject(err)
+            })
+          }
+        })
+      }
+      static finally(cb){
+        return this.then(
+          value => this.reslove(cb()).then(()=>value),
+          reason => this.resolve(cb()).then(()=> {throw reason})
+        )
+      }
+    }
+
+    // 测试 开始===========
+    let test = function(){
+      return new myPromise((reslove, reject)=>{
+        reslove(1)
+      })
+    }
+    let test2 = function(){
+      return new myPromise((reslove, reject)=>{
+        reject(2)
+      })
+    }
+    // test().then(val=>{
+    //   return 2
+    // }).then(val=>{
+    //   console.log(val)
+    // }).catch(val=>{
+    //   console.log('err', val)
+    // })
+    myPromise.all([test(), test2()]).then(res=>{
+      console.log("all-----", res)
+    }).catch(err=>{
+      console.log("all-err-------", err)
+    })
+    // 测试 结束===========
+  </script>
+</body>
+</html>

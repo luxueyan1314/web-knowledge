@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <header>
+    <title>2[1[a]3[b]2[3[c]4[d]]]</title>
+  </header>
+  <script>
+    let str = "2[1[a]3[b]2[3[c]4[d]]]",
+    str2 = "3[abc]"
+    let arr = str.replace(/(\[|\])/g, ',$1,').split(',').filter(item=>(item))
+    let stack1 = [], //存放数值
+    stack2 = []//存放括号内的字符串
+
+    arr.forEach(item => {
+      /*
+         1、如果item是'['stack2存入空字符串，前一位的数字 存入stack1
+         2、如果item是']'stack2最后一组重复(stack1最后一个值)次数，拼接到stack2的上一个元素，同时删除本元素
+      */
+      if(!isNaN(+item)){
+        stack1.push(item)
+      } else if (item === '['){
+        stack2.push('')
+      } else if(item === ']'){
+        if(stack2.length > 1){
+          let endStr = stack2.pop(),
+          num = stack1.pop()
+          for(let i = 0 ; i< num-1; i++){
+            endStr += endStr
+          }
+          stack2[stack2.length - 1] += endStr
+        }
+      } else {
+       let index = stack2.length === 0 ? 0 : stack2.length - 1
+        stack2[index] = item
+      }
+    })
+    console.log("stack2", stack2)
+
+
+  </script>
+</html>

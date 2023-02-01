@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>手写 new关键字</title>
+</head>
+
+<body>
+  <script>
+    // 1、创建一个空对象并继承【构造函数prototype】
+    // 2、this指向【构造函数】
+    // 3、执行构造函数 若构造函数有返回值且返回值是一个引用类型(除null之外)，则返回该值，若无返回值返回this
+    function newFn(fn, ...args){
+      // 创建一个空对象并继承【构造函数prototype】
+      let obj = Object.create(fn.prototype)
+      // this指向【构造函数】
+      let res = fn.call(obj, ...args)
+      // 3、执行构造函数 若构造函数有返回值且返回值是一个引用类型(除null之外)，则返回该值，若无返回值返回this
+      if(res instanceof Object){
+        return res
+      } else {
+        return obj
+      }
+    }
+    // 测试
+    let test = function (a){
+      this.a = a
+    }
+    console.log(newFn(test, 1))
+  </script>
+</body>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>柯理化</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+</body>
+<script>
+    // var add = function(a) {
+    //     return function(b) {
+    //         return function(c) {
+    //             return a * b * c
+    //         }
+    //     }
+    // }
+
+    // console.log(add(1)(2)(3));
+
+    //使用了柯里化的提前返回和延迟执行的特点
+
+    // var addEvent = function(el, type, fn, capture) {
+    //     if(window.addEventListener) {
+    //         el.addEventListener(type, function(e) {
+    //             fn.call(el, e);
+    //         }, capture);
+    //     }else {
+    //         el.attachEvent('on' + type, function(e) {
+    //             fn.call(el, e);
+    //         })
+    //     }
+    // }
+
+
+    var addEvent = (function() {
+        if (window.addEventListen) {
+            return function(el, type, fn, capture) {
+                el.addEventListen(type, function(e) {
+                    fn.call(el, e);
+                }, capture)
+            }
+        } else {
+            return function(el, type, fn) {
+                el.addEvent(type, function(e) {
+                    fn.call(el, e);
+                })
+            }
+        }
+    }())
+
+
+    // bind使用
+    //实现一个bind, 柯里化的参数复用和提前返回
+    Function.prototype.bind = function() {
+        var fn = this;
+        var args = Array.prototype.slice.call(arguments);
+        var context = args.shift();
+
+        console.log("args--------", args);
+        return function() {
+            return fn.apply(context, args.concat(Array.prototype.slice.call(arguments)));
+        }
+    }
+
+    var name = "window"
+    var bindObj = {
+        name: 'bindObj',
+        fn: function() {
+            console.log(this.name);
+        }
+    }
+    bindObj.fn.bind(this)(); //window
+
+
+    // 初步封装,参数复用、提前返回
+    var currying = function(fn) {
+        // args 获取第一个方法内的全部参数
+        var args = Array.prototype.slice.call(arguments, 1)
+        return function() {
+            // 将后面方法里的全部参数和args进行合并
+            var newArgs = args.concat(Array.prototype.slice.call(arguments))
+                // 把合并后的参数通过apply作为fn的参数并执行
+            return fn.apply(this, newArgs)
+        }
+    }
+
+
+    var test = function(a, b, c) {
+        return a * b * c
+    }
+    currying(test)(1, 2, 3) //6
+
+    // var arrTest = [1, 2, 3, 4, 5]
+    // console.log("arrTest-------", Array.prototype.slice.call(arrTest, 1))
+
+
+    // 实现一个add方法，使计算结果能够满足如下预期：
+    // add(1)(2)(3) = 6;
+    // add(1, 2, 3)(4) = 10;
+    // add(1)(2)(3)(4)(5) = 15;
+
+
+    function add() {
+        // 第一次执行时，定义一个数组专门用来存储所有的参数
+        var _args = Array.prototype.slice.call(arguments);
+
+        // 在内部声明一个函数，利用闭包的特性保存_args并收集所有的参数值
+        var _adder = function() {
+            _args.push(...arguments);
+            return _adder;
+        };
+
+        // 利用toString隐式转换的特性，当最后执行时隐式转换，并计算最终的值返回
+        _adder.toString = function() {
+            return _args.reduce(function(a, b) {
+                return a * b;
+            });
+        }
+
+        return _adder;
+    }
+
+    add(1)(2)(3) // f 6
+    add(1, 2, 3)(4) // f 24
+    add(1)(2)(3)(4)(5) // f 120
+    add(2, 6)(1) // f 12
+
+
+
+    function testAAA() {
+        var arr = Array.prototype.slice.call(arguments);
+        console.log("testAAA====arg====")
+
+        var _fn = function() {
+            console.log("fn=----")
+            arr.push(...arguments);
+            return _fn;
+        };
+        _fn.toString = function() {
+            return arr.reduce(function(a, b) {
+                return a + b;
+            });
+        }
+        return _fn
+    }
+
+    console.log(testAAA(1)(2)(3));
+    //testAAA(1)执行的是这个testAAA如果再执行就是执行函数返回的_Fn
+
+    //valueOf函数与toString方法深入理解
+    //js的数据类型除了null和undefined,都含有valueOf和toString方法
+    var obj = {
+            i: 10,
+            valueOf: function() {
+                return this.i + 20;
+            },
+            toString: function() {
+                return this.valueOf() + 10;
+            }
+        }
+        // alert(obj > 20) //true
+        // alert(+obj) //30
+        // alert(obj) //40
+
+    // var obj2 = {
+    //     i: 10,
+    //     valueOf: function() {
+    //         console.log("valueOf");
+    //         return this.i;
+    //     },
+    //     toString: function() {
+    //         console.log("toString");
+    //         return this.i;
+    //     }
+    // }
+
+    // alert(obj2); //10,toString
+    // alert(+obj2); //10,valueOf
+    // alert('' + obj2); //10 valueOf
+    // alert(String(obj2)); //[object Undefined] toString
+    // alert(Number(obj2)) //10 valueOf
+    // alert(obj2 == 10); // true valueOf
+    // alert(obj2 === 10); //false
+</script>
+
+
+</html>

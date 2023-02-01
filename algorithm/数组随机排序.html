@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <header>
+    <title>数组随机排序</title>
+  </header>
+  <body>
+    <script>
+      function sort(arr){
+        let len = arr.length
+        arr.forEach((item,index) =>{
+            let randomIndex = Math.floor(Math.random()*(len-index)) + index
+            console.log("randomIndex", randomIndex)
+            let t = arr[index]
+            arr[index] = arr[randomIndex]
+            arr[randomIndex] = t
+        })
+        return arr
+      }
+      function sort2(arr){
+        let len = arr.length
+        arr.forEach((item,index) =>{
+            let randomIndex = Math.floor(Math.random()*(len-index)) + index
+            console.log("randomIndex", randomIndex)
+            let t = arr[index]
+            arr[index] = arr[randomIndex]
+            arr[randomIndex] = t
+        })
+        return arr
+      }
+      console.log(this.sort2([1,2,3,4,5]))
+    </script>
+  </body>
+</html>

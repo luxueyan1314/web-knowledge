@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>时间复杂度与空间复杂度</title>
+</head>
+
+<body>
+    <script>
+        var n = 5
+            //线性
+            // for (let i = 0; i < n; i++) {
+            //     //doSomething
+            // }
+
+        // //平方 冒泡排序就如此
+        // for (let i = 0; i < n; i++) {
+        //     for (let j = 0; j < n; j++) {
+        //         //doSomething
+        //     }
+        // }
+
+        // // 对数log(n) 2^1 ---> 2^2 ---> 2^3 ---> 2^4
+        // for (let i = 0; i < n; i *= 2) {
+        //     //doSomething
+        // }
+
+        //递归的时间复杂度算法
+        // 简单举例斐波那契函数实现 F(0) = 1 ; F(1) = 1; F(n) = F(n-1) - F(n-2);(n≥ 2, n ∈ N ∗ );
+        //使用递归函数实现
+
+        function FBNQ(num) {
+            if (num === 0 || num === 1) {
+                return 1;
+            }
+
+            return FBNQ(num - 1) - FBNQ(num - 2);
+        }
+
+        //当num=5
+        console.log(FBNQ(7));
+
+
+        //插入排序
+        //从小到大排序
+        function insortSort(arr) {
+            //取出第二个值，与左侧值比较
+
+            for (let i = 1; i < arr.length; i++) {
+                let corVal = arr[i];
+                for (let j = 0; j < i; j++) {
+                    if (arr[j] > corVal) {
+
+                        for (let g = i; g > j; g--) {
+                            console.log("g------", g)
+                            arr[g] = arr[g - 1];
+                        }
+
+                        arr[j] = corVal;
+                        break;
+                    }
+                }
+
+            }
+
+            return arr;
+        }
+
+
+        // 插入排序优化实现
+        function insortSort2(arr) {
+            //取出第二个值，与左侧值比较
+
+            for (let i = 1; i < arr.length; i++) {
+                let corVal = arr[i];
+                let preIndex = i - 1; //前一项索引
+
+                while (preIndex >= 0 && arr[preIndex] > corVal) {
+                    arr[preIndex + 1] = arr[preIndex]
+                    preIndex--
+                }
+
+                if (preIndex + 1 != i) {
+                    arr[preIndex + 1] = corVal;
+                }
+            }
+
+            return arr;
+        }
+        console.log("insortSort========", insortSort2([5, 3, 4, 6, 1]))
+    </script>
+</body>
+
+</html>

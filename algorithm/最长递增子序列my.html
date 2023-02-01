@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>最长递增子序列</title>
+</head>
+
+<body>
+  <script>
+    // 计算最长递增子序列
+    function lengthOfLIS(arr){
+      // 定义一个数组储存数字在数组中大小排序index(左侧有小于的值会加1)
+      let sortArr = new Array(arr.length).fill(1);
+      for(let i = 1; i < arr.length; i++){
+        // 该项与左侧每个数值比较
+        for(let j = 0; j < i; j++){
+          // 如果左侧的值小于i项的值
+          if(arr[j] < arr[i]){
+            // 储存sortArr[i]： sortArr[j]加1或者当前值中最大值
+            sortArr[i] = Math.max(sortArr[i], sortArr[j]+1)
+          }
+        }
+      }
+      // 获取最大值
+      let max = Math.max(...sortArr)
+      let resultArr = []
+      
+      for(let i = max; i > 0; i--){
+        // console.log("this.findArrNode(i, sortArr, arr)", this.findArrNode(i, sortArr, arr))
+        resultArr.unshift(this.findArrNode(i, sortArr, arr))
+      }
+      return resultArr
+    }
+    // 倒顺查找满足排序索引值的项，并删除此项右侧的所有数值项
+    function findArrNode(sortIndex, sortArr, arr){
+      let index = sortArr.findLastIndex(item=>(item === sortIndex));
+      sortArr.splice(index, sortArr.length - index )
+      return arr[index]
+    }
+    console.log("[9, 1, 7, 10, 4, 8, 5, 2]", lengthOfLIS([9, 1, 7, 10, 4, 8, 5, 2]))
+    console.log("[1, 4, 3, 5, 2, 6, 0]", lengthOfLIS([1, 4, 3, 5, 2, 6, 0]))
+  </script>
+</body>
+</html>

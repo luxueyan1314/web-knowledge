@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>top-key问题</title>
+</head>
+
+<body>
+
+    <script>
+        /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         假设数组长度是N,中位数组长度N/5,假定中位数组的中位数叫A，在中位数数组中大于A的数量就是N/10,再加上比 “大于A的中位数数组” 大的值就是N/10 * 2,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            最后大于A的数就是 N/10+2N/10 = 3N/10,最坏的情况也就3N/10 + 2N/10 + 2N/10 = 7/N/10,也可能比“大于A的中位数数组”小的值也比A大，在加比“小于A的中位数数组的值”大的值比他大;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        */
+        /*top-key问题也就是求取前K个最大值或者前K个最小值的问题，首次接触这个问题，第一反应可能就是排序，取前K个，但会有两个问题：
+                            1、快速排序的平均复杂度为$O(nlogn)$，但最坏时间复杂度为$O(n^2)$，不能始终保证较好的复杂度；
+                            2、我们只需要前k大的，而对其余不需要的数也进行了排序，浪费了大量排序时间。
+                        除这种方法之外，堆排序也是一个比较好的选择，可以维护一个大小为k的堆，时间复杂度为$O(nlogk)$。
+                        */
+
+        /*  GetPivotIndex:返回中位数的中位数下标，得到主元（基数）
+            Partition:利用主元进行划分
+            BFPRT:求出第K小
+            InsertSort:对数组 array[left, right] 进行插入排序，并返回 [left, right]的中位数。
+        */
+
+        let array = [11, 9, 10, 1, 13, 8, 15, 0, 16, 2, 17, 5, 14, 3, 6, 18, 12, 7, 19, 4]
+            // 1, 9, 10, 11, 13, 0, 2, 8, 15, 16, 3, 5, 6, 14, 17, 4, 7, 12, 18, 19
+        let key = 8;
+        let a = [];
+        /*
+            对数组start到end部分排序取出中间值
+            用插入法排序
+        */
+        function InsertSort(array, left, right) {
+            // if (start == end) return arr[start];
+
+            // let current, preIndex;
+            // for (let i = start + 1; i <= end; i++) {
+            //     current = arr[i];
+            //     preIndex = i - 1;
+
+            //     while (preIndex >= start && arr[preIndex] > current) {
+            //         arr[preIndex + 1] = arr[preIndex]
+            //         preIndex--;
+            //     }
+
+            //     if (preIndex + 1 != i) {
+            //         arr[preIndex + 1] = current;
+            //     }
+            // }
+            // // arr2 = [arr[start], arr[start + 1], arr[start + 2], arr[start + 3], arr[start + 4]]
+            // // console.log("InsertSort结束=============", arr, start, end);
+            // let mid = Math.ceil((start + end) / 2);
+            // return arr[mid];
+
+
+
+            let temp;
+            let j;
+
+            for (let i = left + 1; i <= right; i++) {
+                temp = array[i];
+                j = i - 1;
+                while (j >= left && array[j] > temp) {
+                    array[j + 1] = array[j];
+                    j--;
+                }
+                array[j + 1] = temp;
+            }
+
+            return ((right - left) >> 1) + left;
+        }
+
+        /*
+            5个数一组，返回中位数数组
+        */
+        function GetPivotIndex(arr, start, end) {
+            if (end - start < 5)
+                return InsertSort(array, start, end);
+
+            let sub_right = start - 1;
+            // 每五个作为一组，求出中位数，并把这些中位数全部依次移动到数组左边
+            for (let i = start; i + 4 <= end; i += 5) {
+                let index = InsertSort(arr, i, i + 4);
+                swap(arr, ++sub_right, index);
+            }
+
+            // let medianList = []
+            // let sum = end - start + 1;
+            // let range = Math.ceil(sum / 5); // 5个数一组，分range个组
+
+            // for (let i = 0; i < range; i++) {
+            //     let low = i * 5;
+            //     let high = i * 5 + 4;
+            //    index = InsertSort(arr, low, Math.min(high, end));
+            //     swap(array[++sub_right], array[index]);
+            // }
+            console.log("medianList========", arr)
+            return BFPRT(arr, 0, sub_right, ((sub_right - start + 1) >> 1) + 1);
+        }
+
+        /*
+            中位数组排序，取中间值
+            partation函数求的是等于number的范围, 二分法查找
+            利用中位数的中位数的下标进行划分，返回分界线下标
+            */
+        function Partition(arr, start, end, pivot_index) {
+            //number 中位数基准值 ，用快速排序的方式，向右侧找比自己小的，替换，向左侧找比自己大的替换，使左侧都小，右侧都大
+            // console.log("Partition--------", arr)
+            // let less = start - 1;
+            // let more = end + 1;
+            // let cur = start;
+
+            // while (less >= 0 && less < more) {
+            // while (arr[less] < number) less++;
+            // while (arr[more] > number) more--;
+            // let tem = arr[more];
+            // arr[more] = arr[less];
+            // arr[less] = tem;
+
+
+            //     if (arr[less] < number) {
+            //         less++;
+            //         swap(arr, less, cur);
+            //         cur++
+            //     } else if (arr[cur] == number) {
+            //         cur++
+            //     } else {
+            //         more--;
+            //         swap(arr, more, cur);
+            //         cur--
+            //     }
+
+            // }
+
+            // a[0] = less + 1;
+            // a[1] = more - 1;
+            // console.log("arr----------", arr);
+
+            swap(arr, pivot_index, end); // 把主元放置于末尾
+
+            let partition_index = start; // 跟踪划分的分界线
+            for (let i = start; i < end; i++) {
+                if (array[i] < array[end]) {
+                    swap(arr, partition_index++, i); // 比主元小的都放在左侧
+                }
+            }
+
+            swap(arr, partition_index, end); // 最后把主元换回来
+
+            return partition_index;
+
+        }
+
+        function swap(arr, a, b) {
+            let temp = arr[a];
+            arr[a] == arr[b];
+            arr[b] == arr[a];
+        }
+
+        function BFPRT(arr, start, end, k) {
+            if (start == end) //数组中只有一个数时，直接返回
+                return arr[start];
+
+            // console.log("BFPRT---------", start, end)
+
+            let divide = GetPivotIndex(arr, start, end); //取出中位数组的中位数作为划分值
+
+            // console.log("divide==========", divide);
+
+            let partition_index = Partition(arr, start, end, divide[0]);
+            let num = partition_index - start + 1;
+
+            if (num == k) {
+                // console.log("array------", arr)
+                return partition_index;
+            } else if (num > k)
+                return BFPRT(arr, start, partition_index - 1, k);
+            else
+                return BFPRT(arr, partition_index + 1, end, k - num);
+
+        }
+
+        console.log("BFPRT-----------", BFPRT(array, 0, array.length - 1, key))
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>bind,call,apply</title>
+</head>
+
+<body>
+    <script>
+      // 手写实现call
+      Function.prototype.myCall = function(context, ...args){
+        if(!(this instanceof Function)){
+          throw Error('not Function')
+        }
+        if(!context){
+          context = window
+        }
+        context.fn = this
+        context.fn(...args)
+        delete context.fn
+      }
+      // 手写实现apply
+      Function.prototype.myApply = function(context, args){
+        if(!(this instanceof Function)){
+          throw Error('not Function')
+        }
+        if(!context){
+          context = window
+        }
+        context.fn = this
+        context.fn(...args)
+        delete context.fn
+      }
+
+      // 手写实现bind
+      Function.prototype.myBind = function(context, ...args){
+        if(!(this instanceof Function)){
+          throw Error('not Function')
+        }
+        if(!context){
+          context = window
+        }
+        let thatFn = this // thatFn调用此bind方法的函数
+        const resultFn = function(...args1){
+          // 判断如果是 运行new操作符
+          // 改变this指向，依然指向原始构造函数
+          if(this instanceof thatFn){
+            this.fn = thatFn
+            this.fn(...args, ...args1)
+            delete this.fn
+          } else {
+            context.fn = thatFn
+            context.fn(...args, ...args1)
+            delete context.fn
+          }
+        }
+        // 使用create将当前调用函数绑定到新函数
+        resultFn.prototype = Object.create(this.prototype)
+        return resultFn
+      }
+
+      var cat = {
+          name: "喵喵",
+          transFn: function(parmes1, parmes2) {
+              console.log(this);
+              console.log(parmes1, parmes2)
+          }
+        }
+      var dog = {
+          name: "汪汪",
+          transFn: function(parmes1, parmes2) {
+            console.log(this);
+            console.log(parmes1, parmes2)
+          }
+        }
+      // 测试 myBind
+      let test = function(x,y){
+        this.x = x
+        this.y = y
+      }
+      test.prototype.add = function(){
+        console.log(this.x+this.y)
+      }
+      
+      let aTest = test.myBind({},1,2)
+      let bTest = new aTest()
+      bTest.add()
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>排序</title>
+    <mate name="viewport" content="width=devise-width,mininum-sale=1.0,maximum-sale=1.0,userSalable=no"></mate>
+</head>
+
+<body>
+    <script>
+        //冒泡排序
+        //规则：从大到小排列数值
+        /*思想：
+            指针从左侧第一个开始，与右侧临近的一个比较，大于指针指向的值，交换，反之，不换，
+            指针再次指向左侧第二个值，依此与其右侧相邻值比较，与以上规则相同
+            执行上述规则length-1轮交换 
+        */
+
+        function maopaoSort(data) {
+            var arr = JSON.parse(JSON.stringify(data));
+
+            /*
+                第一个循环控制循环多少轮（从第1个两两比较到最后一个，算一轮）
+                第二个循环控制哪个两个数值比较，相邻两两比较。
+            */
+            for (let i = 0; i < arr.length - 1; i++) {
+
+                /*这里（arr.length - i - 1）
+                    减i的原因：第一轮比较，将筛出最后一个值为最小/最大，再进行一轮比较，倒数第二个最小/最大值排好
+                    减1的原因:在进行到比较倒数第二个(j)的时候，已经比较了最后一个(j+1)，假若不减1，j+1是
+                */
+                for (let j = 0; j < arr.length - i - 1; j++) {
+                    if (arr[j] < arr[j + 1]) {
+                        var t = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = t;
+                    }
+                }
+            }
+            return arr;
+        }
+        var arr = [2, 1, 0, 6, 7, 5, 8, 10, 9]
+
+        console.log("maopaoSort------------", maopaoSort(arr))
+
+
+        // 选择排序实现1
+        //从小到大排列，从左侧第一个开始，往右侧查找，第二个跟第一个比较，若第二个比第一个大就替换，
+
+        function sort1(data) {
+            var arr = JSON.parse(JSON.stringify(data));
+            for (var i = 0; i < arr.length; i++) {
+                for (var j = i + 1; j < arr.length; j++) {
+                    if (arr[i] > arr[j]) {
+                        var t = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = t;
+                    }
+                }
+            }
+            return arr
+        }
+
+
+        //选择排序
+        //把当前这个当作最小的一个，继续查找所有元素，找到一个比这个小的就替换这个最小值，并且替换位置，最后小的都将会往前方排
+        function sort2(arr) {
+            for (var i = 0; i < arr.length; i++) {
+                var min = i; //记录最小值的序号
+                // 每次从未排序数组中找到最小值的坐标
+                for (var j = i + 1; j < arr.length; j++) {
+                    if (arr[j] < arr[min]) {
+                        min = j
+                    }
+                }
+                //排除当前值为自己本身
+                if (min != i) {
+                    var tel = arr[i];
+                    arr[i] = arr[min]
+                    arr[min] = tel;
+                }
+            }
+            return arr;
+        }
+        // var arr = [2, 1, 0, 6, 7, 5, 8, 10, 9]
+        // console.log("sort2--------", sort2(arr));
+
+        //插入排序（直接插入）
+        /*
+            1.取出一个值(从第二个开始)空出当前位置
+            2.向前(左侧)匹配，"取出值"从左侧第一个开始，如果大于"取出值"往右侧移动
+            3.找到比"取出值"小的，在它右侧插进去
+        */
+
+        function sort3(data) {
+            var len = data.length;
+            if (data.length <= 1) return;
+            let current, preIndex;
+            for (let i = 1; i < len; i++) {
+                current = data[i]; // 取出当前值
+                preIndex = i - 1;
+
+                //向左侧匹配，大于“取出值”，执行循环往右侧挪动一位
+                while (preIndex >= 0 && data[preIndex] > current) {
+                    data[preIndex + 1] = data[preIndex]; //元素往右侧移动
+                    preIndex-- //继续向左侧匹配
+                }
+
+                if (preIndex + 1 != i) {
+                    data[preIndex + 1] = current;
+                }
+            }
+            return data
+        }
+        // var arr = [2, 1, 0, 6, 7, 5, 8, 10, 9]
+        // console.log(sort3(arr));
+
+        //插入排序（拆半插入）
+        // 【空】没懂
+
+        //归并排序
+        /*递归拆分数组：
+            1.先将数组拆分通过floor(n/2)的方式拆分为arr1和arr2两个数组
+            2.如果长度大于4，再继续将arr1按照floor(n/2)的方式拆分为arr11和arr12，arr2相同
+            3.按照第(2)部方式一直拆，也就需要写个方法，来一直执行这个函数，直到最后只剩下一个数据停止递归
+
+        迭代法将数组合并：
+            1.定义一个空数组result，再定义两个指针分别指向arr1和arr2的起始位置
+            2.比较两个指针所指向数值的大小，将较大的一个存入数组result，此时存在较大值的指针向右侧移动,继续比较
+            3.循环（2）步骤，将一开始拆分的一组1个值按照顺序合并到result
+
+            合并时的比较就相当于两队人马的单人比赛，两队分别为A队和B队，两队分别一个人上场，A队的输了，换A队的下一个人上场再和B队的第一个人的比
+        */
+
+        function mergingSort(arr) {
+            let len = arr.length;
+            if (len < 2) return arr;
+
+            let mid = len >> 1; // len>>1,相当于Math.floor(len/2);
+            let arr1 = arr.slice(0, mid);
+            let arr2 = arr.slice(mid);
+            console.log("mid-------", mid, arr1, arr2)
+            return merge(mergingSort(arr1), mergingSort(arr2))
+        }
+
+
+
+        let tag = 1;
+
+        function merge(arr1, arr2) {
+            console.log("tag" + tag + "=", arr1, arr2);
+            tag++;
+            let result = [];
+            // 如果arr1和arr2都有数值那就比较
+            while (arr1.length && arr2.length) {
+                if (arr1[0] <= arr2[0]) {
+                    result.push(arr1.shift()) // 删除指针指向元素并且存入result结果中
+                } else {
+                    result.push(arr2.shift()) // 删除指针指向元素并且存入result结果中
+                }
+            }
+
+            while (arr1.length > 0) { //序列1中多余的元素移入新数组
+                result.push(arr1.shift())
+            }
+
+            while (arr2.length) { //序列2中多余的元素移入新数组
+                result.push(arr2.shift())
+            }
+
+            console.log("return merge----------", result)
+            return result;
+        }
+
+        // var arr = [2, 1, 0, 6, 7, 5, 8, 10, 9]
+        // var arr1 = [3, 2, 4, 5, 1]
+        // console.log("result================", mergingSort(arr1));
+        // console.log(mergingSort([1, 2]));
+
+        // 快速排序(简单实现)
+        //类似二分法，把一个序列分成两份，取中间值，大于中间值的放在right数组，小于中间是放在left；
+
+        const quickSort = arr => {
+            if (arr.length <= 1) {
+                return arr;
+            }
+            let mid = arr.length >> 1;
+            let midVal = arr.splice(mid, 1)[0];
+            let left = [];
+            let right = [];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i] < midVal) {
+                    left.push(arr[i])
+                } else {
+                    right.push(arr[i])
+                }
+            }
+            console.log("left=====", left, "midVal======", midVal, "right=====", right)
+            return quickSort(left).concat(midVal, quickSort(right))
+        }
+
+
+
+        var testArr = [2, 11, 10, 5, 4, 13, 9, 7, 8, 1, 12, 3, 6, 15, 14]
+        console.log("quickSort================", quickSort(testArr))
+
+        //快速排序实现2
+
+        const quickSort1 = (arr, left, right) => {
+
+            let key = arr[left];
+            let start = left;
+            let end = right;
+
+            while (start < end) {
+
+                // 从右边找到第一个比key小的值
+                while (arr[end] > key) end--;
+                //从左侧找第一个比key大的值
+                while (arr[start] < key) start++;
+
+                let tem = arr[end];
+                arr[end] = arr[start];
+                arr[start] = tem;
+
+            }
+
+            if (start > left) {
+                quickSort1(arr, left, start)
+            }
+
+            if (end < right) {
+                quickSort1(arr, end + 1, right);
+            }
+        }
+
+        var testArr = [2, 11, 10, 5, 4, 13, 9, 7, 8, 1, 12, 3, 6, 15, 14]
+        quickSort1(testArr, 0, testArr.length - 1)
+            // console.log("quickSort================", testArr)
+
+
+        //堆排序
+        /*
+        
+        */
+
+        // 堆排序
+        const heapSort = array => {
+            console.time('堆排序耗时');
+            // 初始化大顶堆，从第一个非叶子结点开始
+            let arr2 = []
+            for (let i = Math.floor(array.length / 2 - 1); i >= 0; i--) {
+                heapify(array, i, array.length);
+            }
+            arr2 = array;
+            console.log("arrr2---------", arr2);
+
+            // 排序，每一次 for 循环找出一个当前最大值，数组长度减一（拿最后一个节点做交换，保持顶部最大）
+            for (let i = Math.floor(array.length - 1); i > 0; i--) {
+                // 根节点(最下方子节点)与最后节点(顶部节点)交换(最后一级都是最小的,最小的和最大的交换)
+                swap(array, 0, i);
+                // 从根节点开始调整，并且最后一个结点已经为当前最大值，不需要再参与比较，所以第三个参数为 i，即比较到最后一个结点前一个即可
+                heapify(array, 0, i);
+            }
+            console.timeEnd('堆排序耗时');
+            return array;
+        };
+
+        // 交换两个节点
+        const swap = (array, i, j) => {
+            let temp = array[i];
+            array[i] = array[j];
+            array[j] = temp;
+        };
+
+        // 将 i 结点以下的堆整理为大顶堆，注意这一步实现的基础实际上是：
+        // 假设结点 i 以下的子堆已经是一个大顶堆，heapify 函数实现的
+        // 功能是实际上是：找到 结点 i 在包括结点 i 的堆中的正确位置。
+        // 后面将写一个 for 循环，从第一个非叶子结点开始，对每一个非叶子结点
+        // 都执行 heapify 操作，所以就满足了结点 i 以下的子堆已经是一大顶堆
+        const heapify = (array, i, length) => {
+            let temp = array[i]; // 当前父节点
+            console.log("iiiiii------", length, temp);
+
+            // j < length 的目的是对结点 i 以下的结点全部做顺序调整
+            for (let j = 2 * i + 1; j < length; j = 2 * j + 1) {
+
+                temp = array[i]; // 将 array[i] 取出，整个过程相当于找到 array[i] 应处于的位置
+
+                if (j + 1 < length && array[j] < array[j + 1]) { //保证没有结束,第二个孩子大于第一个孩子
+                    j++; // 找到两个孩子中较大的一个，再与父节点比较
+                }
+                if (temp < array[j]) { //如果大于父节点，交换
+                    swap(array, i, j); // 如果父节点小于子节点:交换；否则跳出
+                    i = j; // 交换后，temp 的下标变为 j
+                } else {
+                    break;
+                }
+            }
+        };
+
+        // const array = [4, 6, 8, 5, 9, 1, 2, 5, 3, 2];
+        // console.log('原始array:', array);
+        // const newArr = heapSort(array);
+        // console.log('newArr:', newArr);
+
+        // 二分查找
+        /*
+            前提：在一个有序的的环境，按照从小到大排列
+            
+            获取值所在的位置
+            用中位数划分
+            等于中位数直接输出
+            大于中位数
+        */
+        function binarySearch(data, dest) {
+            let start = 0;
+            let end = data.length - 1;
+
+            while (start <= end) {
+                let mid = parseInt((start + end) / 2);
+                console.log("mid--------", mid, start, end, data[mid]);
+                if (dest == data[mid]) {
+                    return mid;
+                } else if (dest < data[mid]) {
+                    end = mid - 1;
+                } else if (dest > data[mid]) {
+                    start = mid + 1;
+                }
+
+            }
+        }
+
+        var binaryArr = [-34, 1, 3, 4, 5, 8, 34, 45, 65, 87];
+        console.log("binarySearch------------", binarySearch(binaryArr, 4));
+    </script>
+</body>
+
+</html>

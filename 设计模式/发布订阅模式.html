@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>发布订阅模式</title>
+</head>
+
+<body>
+  <p>
+  </p>
+  <script>
+    class EventBus {
+      constructor(){
+        this.targetTask = {}
+      }
+      on(type, fn){
+        if(!this.targetTask[type]){
+          this.targetTask[type].fn = []
+        } 
+        this.targetTask[type].fn.push(fn)
+      }
+      emit(type, ...args){
+        if(this.targetTask[type].fn){
+          this.targetTask[type].fn.forEach(item=>{
+            item.apply(this, ...args)
+          })
+        }
+      }
+      off(type, fn){
+        this.targetTask[type].fn = this.targetTask[type].fn.filter(item=>item !== fn)
+      }
+      once(type, fn){
+        function f(...args){
+          fn(...args)
+          this.off(fn)
+        }
+        this.on(type, fn)
+      }
+    }
+  </script>
+</body>
+</html>
+

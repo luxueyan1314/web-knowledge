@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>menu</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+</body>
+<script>
+    // var oldArr = [1, 2, 3, [3, 4, 5],
+    //     [1, [2, 3]]
+    // ];
+
+    // var resultArr = [];
+
+    // function arrange(data) {
+    //     if (data.length > 0) {
+    //         data.forEach(item => {
+    //             console.log("Object.prototype.toString.call(item)", Object.prototype.toString.call(item))
+    //             if (Object.prototype.toString.call(item) == "[object Array]") {
+    //                 arrange(item);
+    //             } else {
+    //                 resultArr.push(item)
+    //             }
+    //         });
+    //     } else {
+
+    //         return false;
+    //     }
+    // }
+
+    // arrange(oldArr);
+    // console.log(resultArr)
+
+    // let arr1 = [1,2, [ ] ];
+    // let arr2 = arr1.slice(); 
+    // arr2.push(4); 
+    // arr2[2].push(3); 
+    // console.log(arr1,arr2);
+
+
+    let arr1 = [1, 2, 3];
+    let arr2 = arr1;
+    arr2.push(4);
+    console.log(arr1, arr2);
+
+    let a = 0
+
+    function A() {
+        let a = 1;
+        add = function() {
+            a += 1
+        };
+
+        function B() {
+            console.log(a)
+        }
+        return B
+    }
+    var result = A();
+    result(); // 结果
+    add();
+    result(); // 结果
+
+
+    for (var i = 1; i <= 5; i++) {
+        setTimeout(function timer() {
+            console.log(i);
+        }, i * 1000);
+    }
+</script>
+
+</html>

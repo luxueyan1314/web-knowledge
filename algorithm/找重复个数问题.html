@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>menu</title>
+</head>
+
+<body>
+    <div id="app"></div>
+</body>
+<script>
+    let arr = [4, 2, 1, 2, 1, 5, 2]
+
+    function twoCode(arr) {
+        let obj = {},
+            retArr = [];
+
+        arr.forEach(item => {
+            //如果obj不存在这个值, 把数据当作Key存入对象
+            if (obj[item] !== undefined) {
+                obj[item]++;
+            } else {
+                obj[item] = 1;
+            }
+        })
+
+        for (let key in obj) {
+            if (obj[key] === 2) {
+                retArr.push(key);
+            }
+        }
+        return retArr;
+    }
+    console.log(twoCode(arr));
+</script>
+
+</html>

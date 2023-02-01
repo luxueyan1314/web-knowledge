@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+</head>
+
+<body>
+    <script>
+        var o = [{
+            id: '007',
+            type: "广州"
+        }, {
+            id: '005',
+            type: "深圳"
+        }, {
+            id: '008',
+            type: "东莞"
+        }, {
+            id: '003',
+            type: "中山"
+        }, {
+            id: '002',
+            type: "深圳"
+        }, {
+            id: '006',
+            type: "佛山"
+        }];
+
+
+        var compete = {
+            "东莞": 1,
+            "佛山": 2,
+            "广州": 3,
+            "深圳": 4,
+            "中山": 5
+        }
+        var relute = o.sort(function(a, b) {
+            return compete[a.type] - compete[b.type];
+        })
+        document.write("relute1:" + JSON.stringify(relute) + '</br>');
+
+        var compete2 = ["东莞", "佛山", "广州", "深圳", "中山"];
+        var relute2 = o.sort(function(a, b) {
+            return compete2.indexOf(a.type) - compete2.indexOf(a.type);
+        })
+        document.write("relute2:" + JSON.stringify(relute2) + '</br>');
+
+        var exist = o.some(function(item) {
+            return item.id == "002"
+        }, this)
+
+        document.write("exist:" + JSON.stringify(exist) + '</br>');
+
+        var filter = o.filter(function(item) {
+            return item.id == "002"
+        })
+        document.write("filter:" + JSON.stringify(filter));
+
+
+        //合并对象Object.assign()
+        var target = {
+            a: 1,
+            b: 2
+        };
+        var source = {
+            b: 4,
+            c: 5
+        };
+        // var result = Object.assign(target, source);
+        var result = {...target,
+            ...source
+        }
+        console.log("result===========", result);
+
+
+        //浅拷贝
+        var obj1 = {
+            a: 1,
+            b: {
+                c: 0
+            }
+        }
+        var obj2 = Object.assign({}, obj1);
+        obj2.a = 10;
+        obj2.b.c = 4;
+        console.log("obj1:", obj1)
+        console.log("obj2:", obj2);
+
+        let userlist = [{
+                "id": 1,
+                "name": "小明",
+                "gender": "1"
+            }, {
+                "id": 2,
+                "name": "小美",
+                "gender": "2"
+            }, {
+                "id": 3,
+                "name": "安娜",
+                "gender": "2"
+            }, {
+                "id": 4,
+                "name": "壮壮",
+                "gender": "1"
+            }]
+            // var mapResult = userlist.map(function(item) {
+            //         return {
+            //             "id": item.id,
+            //             "name": item.name
+            //         };
+            //     })
+
+        var mapResult = userlist.map(item => ({
+            "id": item.id,
+            "name": item.name
+        }));
+        console.log("mapResult---------", mapResult);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <script>
+    
+    let heroHead = {
+        name: '',
+        no: '',
+        next: null
+      },
+    p1 = { name: '宋江', no: 1, next: null },
+    p2 = { name: '卢俊义', no: 2, next: null },
+    p3 = { name: '李逵', no: 3, next: null },
+    p4 = { name: '赵刚', no: 4, next: null }
+
+    function upDataNode(newNode){
+      let temp = heroHead,
+      flag = false
+
+      while(true){
+        if(temp.next == null){
+          break;
+        }
+        //排序，按顺序新增或者插入
+        if( temp.next.no > newNode.no ){
+        
+          flag = true
+          break;
+        }else if( temp.next.no === newNode.no){
+          //替换
+          temp.next.name = newNode.name
+        }else{
+         temp = temp.next
+        }
+      }
+
+      if(flag){
+        //插入
+        newNode.next = temp.next
+        temp.next = newNode
+      }else{
+        temp.next = newNode
+      }
+    }
+
+    function showList(){
+      let temp = heroHead.next
+      while(true){
+        console.log("temp=====", temp.no, "name:", temp.name )
+        if(temp.next == null){
+          break;
+        }
+        temp = temp.next
+      }
+    }
+    
+    function deleteNode(node){
+      let temp = heroHead,
+      flag = false
+      //判断是否存在
+      while(true){
+        if(temp.next == null){
+          break;
+        }
+        if(temp.next.no === node.no){
+          flag = true
+          break;
+        }
+        temp = temp.next
+      }
+      //若存在删除
+      if(flag){
+        temp.next = temp.next.next 
+      }else{
+      //若不存在提示
+      console.log("不存在----------")
+      }
+    }
+    upDataNode(p1)
+    upDataNode(p2)
+    upDataNode(p4)
+    upDataNode(p3)
+    
+    showList()
+    // deleteNode(p3)
+    // showList()
+    console.log("反转链表开始------------")
+    reserveLinkedList(heroHead)
+    showList()
+
+    // 单链表反转
+    function reserveLinkedList(head){
+      let cur = head.next, //当前节点
+      next = null, //下一节点
+      reserveHead = {
+        name: '',
+        no: '',
+        next: null
+      } //重新定义链表
+
+      if(cur == null){
+        console.log("当前链表为空！")
+      }
+      while(cur){
+        next = cur.next
+        cur.next = reserveHead.next
+        reserveHead.next = cur
+
+        cur = next
+      }
+      head.next = reserveHead.next
+    }
+  </script>
+</body>
+</html>

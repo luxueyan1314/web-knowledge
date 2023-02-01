@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>事件循环机制 Event Loop</title>
+</head>
+
+<body>
+  <p>宏任务、微任务</p>
+  <ul>
+    <li>宏任务:script中同步代码 setTimeOut setInterval setImmediate</li>
+    <li>微任务：promise mutationObserver</li>
+  </ul>
+  <p>事件轮询机制执行过程</p>
+  <ul>
+    <li>宏任务和微任务在不同的队列中存储</li>
+    <li>遇到宏任务先执行宏任务、检查微任务队列中有任务，先将全部微任务执行完</li>
+    <li>微任务执行完之后，会检查宏任务队列是否有任务，如果有执行宏任务（宏任务是一个一个执行的）</li>
+    <li>宏任务执行完成,检查微任务队列中有任务,重复操作</li>
+  </ul>
+  <p>定时器 </p>
+  <p>JS提供了一些原生方法来实现延时去执行某一段代码</p>
+  <ul>
+    <li>setTimeout/setInterval</li>
+    <li>setTimeout固定时长后执行</li>
+    <li>setInterval间隔固定时间重复执行</li>
+    <li>setTimeout、setInterval最短时长为4ms</li>
+  </ul>
+  <p>定时器不准的原因 </p>
+  <ul>
+    <li>setTimeout/setInterval的执行时间并不是确定的</li>
+    <li>lisetTimeout/setInterval是宏任务，根据事件轮询机制，其他任务会阻塞或延迟js任务的执行</li>
+    <li>考虑极端情况，假如定时器里面的代码需要进行大量的计算，或者是DOM操作，代码执行时间超过定时器的时间，会出现定时器不准的情况
+    setTimeout/setInterval 动画卡顿</li>
+  </ul>
+
+    不同设备的屏幕刷新频率可能不同， setTimeout/setInterval只能设置固定的时间间隔，这个时间和屏幕刷新间隔可能不同
+    setTimeout/setInterval通过设置一个间隔时间，来不断改变图像实现动画效果，在不同设备上可能会出现卡顿、抖动等现象
+    requestAnimationFrame
+    requestAnimationFrame 是浏览器专门为动画提供的API
+    requestAnimationFrame刷新频率与显示器的刷新频率保持一致，使用该api可以避免使用setTimeout/setInterval造成动画卡顿的情况
+    requestAnimationFrame：告诉浏览器在下次重绘之前执行传入的回调函数(通常是操纵dom，更新动画的函数)
+
+    setTimeout、setInterval、requestAnimationFrame 三者的区别
+    1）引擎层面
+    setTimeout属于 JS引擎 ，存在事件轮询
+    requestAnimationFrame 属于 GUI引擎
+    JS引擎与GUI引擎是互斥的，也就是说 GUI引擎在渲染时会阻塞JS引擎的计算
+    这样设计的原因，如果在GUI渲染的时候，JS同时又改变了dom，那么就会造成页面渲染不同步
+    2）性能层面
+    当页面被隐藏或最小化时，定时器 setTimeout仍会在后台执行动画任务
+    当页面处于未激活的状态下，该页面的屏幕刷新任务会被系统暂停，requestAnimationFrame也会停止
+    
+  <script>
+    // 面试题
+    Promise.resolve().then(val=>{
+      console.log("promise1")
+    }).then(val=>{
+      console.log("promise2")
+    })
+    function a(){
+      console.log("a")
+      setTimeout(function(){
+        console.log("a-time")
+        Promise.resolve().then(val=>{
+          console.log("a-time-promise1")
+        })
+        Promise.resolve().then(val=>{
+          console.log("a-time-promise2")
+        })
+      },0)
+    }
+    setTimeout(function(){
+      console.log("time1")
+      Promise.resolve().then(val=>{
+        console.log("time1-promise1")
+      })
+      Promise.resolve().then(val=>{
+        console.log("time1-promise2")
+      })
+    },0)
+
+    Promise.resolve().then(val=>{
+      console.log("promise3")
+    })
+    
+    console.log("start1")
+    a()
+    // start1 a  promise1 promise3 promise2 time1 time1-promise1 time1-promise2 a-time a-time-promise1 a-time-promise2
+
+    // async await 事件轮询机制执行过程
+    console.log("script start");
+    async function async1() {
+      await async2(); // await 隐式返回promise
+      console.log("async1 end"); // 这里的执行时机：在执行微任务时执行
+    }
+    async function async2() {
+      console.log("async2 end"); // 这里是同步代码
+    }
+    async1();
+    setTimeout(function() {
+      console.log("setTimeout");
+    }, 0);
+    new Promise(resolve => {
+      console.log("Promise"); // 这里是同步代码
+      resolve();
+    })
+      .then(function() {
+        console.log("promise1");
+      })
+      .then(function() {
+        console.log("promise2");
+      }); 
+    console.log("script end");
+
+    // 打印结果:  script start => async2 end => Promise => script end => async1 end => promise1 => promise2 => setTimeout
+
+
+  </script>
+</body>

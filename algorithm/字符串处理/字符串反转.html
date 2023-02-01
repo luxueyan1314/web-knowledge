@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>字符串反转实现</title>
+</head>
+
+<body>
+    <script>
+        function backNum(num) {
+            let max = Math.pow(2, 31) - 1;
+            let min = Math.pow(-2, 31);
+
+            if (num <= max && num >= min) {
+                let mark = num > 0 ? "" : "-",
+                    str = num > 0 ? "" + num : "" + (-num);
+                str = str.split("").reverse().join("");
+
+                return Number(mark + str);
+            } else {
+                return 0
+            }
+        }
+
+        function backNum2(num) {
+            let max = Math.pow(2, 31) - 1;
+            let min = Math.pow(-2, 31);
+
+            if (num <= max && num >= min) {
+
+                let val = 0,
+                    mark = num > 0 ? 1 : -1;
+                num = Math.abs(num);
+                while (num >= 1) {
+                    //循环从最后一位向前取值
+                    let curVal = num % 10;
+                    val = val * 10 + curVal;
+                    num = Math.floor(num / 10);
+                }
+                return val * mark;
+            } else {
+                return 0
+            }
+        }
+        console.log(backNum2(1234567890))
+    </script>
+</body>
+
+</html>

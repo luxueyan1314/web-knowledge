@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>时间复杂度与空间复杂度</title>
+</head>
+
+<body>
+    <script>
+        let a = "qabecdffg",
+            b = 'abced';
+
+        function maxVal(a, b) {
+            let str = "null";
+            // for (let i = 0; i < a.length; i++) {
+            //     if (a.substr(i, 1) == b.substr(i, 1)) {
+            //         str += a.substr(i, 1)
+            //     } else {
+            //         break;
+            //     }
+            // }
+            for (let i = 0; i < b.length; i++) {
+                let aVal = a.substr(0, (i + 1));
+                let regeA = new RegExp(`^${aVal}`, "i");
+                if (regeA.test(b)) {
+                    str = aVal
+                } else {
+                    break;
+                }
+            }
+            return str;
+        }
+
+        console.log(maxVal(a, b));
+    </script>
+</body>

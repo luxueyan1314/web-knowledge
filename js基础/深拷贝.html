@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>手写实现 深拷贝 </title>
+</head>
+
+<body>
+  <script>
+    function isObject(obj){
+      return typeof obj === 'object' && obj !== null
+    }
+    function deepClone(data, hash = new WeakMap()){
+      let result
+      if (hash.get(data)) return hash.get(target);
+      
+      // 判断如果是数组/对象循环赋值 我写的
+      // let toString = Array.prototype.toString
+      // if(data instanceof Array){
+      //   result = []
+      //   for(let [i,p] of data.entries()){
+      //     if(p && (Array.isArray(p) || toString.call(p) === '[object Object]')){
+      //       result[i] = deepClone(p)
+      //     } else {
+      //       result[i] = p
+      //     }
+      //   }
+      // } else if(toString.call(data) === '[object Object]'){
+      //   result = {}
+      //   for(let key in data){
+      //     let item  = data[key]
+      //     if(item && (Array.isArray(item) || toString.call(item) === '[object Object]')){
+      //       result[key] = deepClone(item)
+      //     } else {
+      //       result[key] = item
+      //     }
+      //   }
+      // } 
+
+      // 判断是对象/数组 参考优化的
+      if(isObject(data)){
+        result = Array.isArray(data) ? [] : {}
+        
+        // 关键代码，解决对象的属性循环引用 和 多个属性引用同一个对象的问题，避免重复拷贝
+        hash.set(data, result);
+
+        for(let key in data){
+          if(isObject(data[key])){
+            result[key] = deepClone(data[key])
+          } else {
+            result[key] = data[key]
+          }
+        }
+      } else {
+        return data
+      }
+      return result
+    }
+    // 测试
+    let o = {
+        name: 'wclimb',
+        test1: null,
+        test2: undefined,
+        test3: function(){alert(1)},
+        test4: {}
+    }
+    console.log(deepClone(o))
+    
+  </script>
+</body>
