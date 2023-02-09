@@ -2,7 +2,7 @@
  * @Author: xueyan 2387480110@qq.com
  * @Date: 2023-01-09 18:03:45
  * @LastEditors: xueyan 2387480110@qq.com
- * @LastEditTime: 2023-02-08 19:59:08
+ * @LastEditTime: 2023-02-09 15:07:38
  * @FilePath: /web-knowledge/algorithm/链表/doublyLinkedList.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -77,3 +77,15 @@ class DoublyLinkedList extends LinkedList {
     }
   }
 }
+
+// test
+let doublyLinkedList = new DoublyLinkedList()
+doublyLinkedList.push(1)
+doublyLinkedList.push(2)
+doublyLinkedList.push(3)
+doublyLinkedList.push(4)
+linkedList.removeAt(2)
+console.log("removeAt-2", doublyLinkedList.toString())
+linkedList.inset(5,2)
+console.log("inset-5,2", doublyLinkedList.toString())
+console.log("indexOf-5", doublyLinkedList.indexOf(5))
