@@ -102,23 +102,24 @@ import { defaultEquals } from '../util/index.js'
     return this.count === 0
   }
   toString(){
+    if(!this.head) return
+    let str = this.head.element
     let lastNode = this.head
-    let str = JSON.stringify(lastNode.element)
-    while(lastNode.next){
+    for(let i = 1; i < this.size(); i++){
       lastNode = lastNode.next
-      str += JSON.stringify(lastNode.element)
+      str += ','+lastNode.element
     }
     return str
   }
 }
 
-let linkedList = new LinkedList()
-linkedList.push(1)
-linkedList.push(2)
-linkedList.push(3)
-linkedList.push(4)
-linkedList.removeAt(2)
-console.log("removeAt-2", linkedList.toString())
-linkedList.inset(5,2)
-console.log("inset-5,2", linkedList.toString())
-console.log("indexOf-5", linkedList.indexOf(5))
+// let linkedList = new LinkedList()
+// linkedList.push(1)
+// linkedList.push(2)
+// linkedList.push(3)
+// linkedList.push(4)
+// linkedList.removeAt(2)
+// console.log("removeAt-2", linkedList.toString())
+// linkedList.inset(5,2)
+// console.log("inset-5,2", linkedList.toString())
+// console.log("indexOf-5", linkedList.indexOf(5))
