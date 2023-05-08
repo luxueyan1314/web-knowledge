@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>使用performance</title>
+    <style>
+      .block-1 {
+        width: 50px;
+        height: 50px;
+        background: red;
+      }
+      .block-2 {
+        width: 100px;
+        height: 100px;
+        background: yellow;
+      }
+    </style>
+  </head>
+  <body id="body">
+    <div class="block-1"></div>
+    <div class="block-2"></div>
+  </body>
+  <script>
+    const block1 = document.querySelector('.block-1')
+    const block2 = document.querySelector('.block-2')
+    function changeHight(){
+      block1.style.height = '100px'
+    }
+    function myEventClick(){
+      setTimeout(() => {
+        changeHight()
+      }, 0);
+    }
+    block1.addEventListener('click', myEventClick)
+      
+    //选择一个需要观察的节点
+    var targetNode = document.getElementById('body')
+
+    // 设置observer的配置选项
+    var config = { attributes: true, childList: true, subtree: true }
+
+    // 当节点发生变化时的需要执行的函数
+    var callback = function (mutationsList, observer) {
+      for (var mutation of mutationsList) {
+        if (mutation.type == 'childList') {
+          console.log('A child node has been added or removed.')
+        } else if (mutation.type == 'attributes') {
+          console.log('The ' + mutation.attributeName + ' attribute was modified.')
+        }
+      }
+    }
+
+    // 创建一个observer示例与回调函数相关联
+    var observer = new MutationObserver(callback)
+    console.log('targetNode', targetNode)
+    //使用配置文件对目标节点进行观测
+    observer.observe(targetNode, config)
+
+    // 停止观测
+    observer.disconnect()
+  </script>
+</html>

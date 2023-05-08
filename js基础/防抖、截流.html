@@ -1,0 +1,22 @@
+<!-- 防抖 -->
+function debounce(f, wait){
+  let timer;
+  return fn(...args){
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      f(...args)
+    }, wait)
+  }
+}
+<!-- 截流 -->
+function throttle(f, wait){
+  let timer;
+  return fn(...args){
+    if(timer) return
+    clearTimeout(timer);
+    timer = setTimeout(()=>{
+      f(...args)
+      timer = null
+    }, wait)
+  }
+}

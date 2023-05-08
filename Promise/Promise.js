@@ -1,4 +1,4 @@
-(function(window) {
+// (function(window) {
     const PENDING = "pending";
     const REJECTED = "rejected";
     const RESOLVED = 'resolved';
@@ -165,5 +165,6 @@
         })
     }
 
-    window.Promise = Promise;
-})(window)
+    // window.Promise = Promise;
+// })(window)
+export {Promise}

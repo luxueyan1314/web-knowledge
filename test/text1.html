@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>MutationObserver示例</title>
+  </head>
+  <body>
+    <div id="target">
+      <p>这是一个需要监听的DOM节点</p>
+    </div>
+    <button id="add-btn">添加子节点</button>
+
+    <script>
+      const targetNode = document.getElementById('target');
+      const observer = new MutationObserver((mutationsList, observer) => {
+        for (let mutation of mutationsList) {
+          if (mutation.type === 'childList') {
+            console.log('DOM节点发生了变化');
+          }
+        }
+      });
+      const config = { attributes: true, childList: true, subtree: true };
+      observer.observe(targetNode, config);
+
+      const addBtn = document.getElementById('add-btn');
+      addBtn.addEventListener('click', () => {
+        const newChild = document.createElement('p');
+        newChild.textContent = '这是一个新的子节点';
+        targetNode.appendChild(newChild);
+      });
+    </script>
+  </body>
+</html>
