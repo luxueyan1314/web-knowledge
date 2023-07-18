@@ -11,7 +11,7 @@ import { defaultCompare, Compare} from '../util/index.js'
      max()：返回树中最大的值/键。
      remove(key)：从树中移除某个键。
  */
-class BinarySearchTree {
+export default class BinarySearchTree {
   constructor(compareFn = defaultCompare){
     this.compareFn = compareFn
     this.root = null
@@ -76,21 +76,23 @@ class BinarySearchTree {
   } 
   // 后序遍历 左结点 右结点 根结点
   postOrderTraverse(callback){ 
-    let q = []
-    let node = this.root
-    while(node || q.length){
-      while(node) {
-        q.push(node)
-        node = node.left
-      } 
-      if(q.length){
-        let curNode = q.pop()
-        node = curNode.right
+    let res = []
+    let q = [this.root]
+    let node;
+    while(q.length){
+      node = q.pop()
+      res.push(node.data)
+      if(node.left){
+        q.push(node.left)
+      }
+      if(node.right){
+        q.push(node.right)
       }
     }
+    res.reverse().forEach(item => callback(item))
   }
+  // 层级遍历 队列实现
   storeyOrderTraverse(callback){
-    // 层级遍历 队列实现
     let q = []
     q.push(this.root) 
     while(q.length){
@@ -126,9 +128,9 @@ tree.insert(5);
 tree.insert(3);
 tree.insert(2);
 tree.insert(4);
-tree.insert(7); 
-tree.insert(6); 
-tree.insert(8); 
-// tree.inOrderTraverse((item => console.log(item))); //中序遍历
-// tree.preOrderTraverse((item => console.log(item))); //先序遍历
+tree.insert(7);
+tree.insert(6);
+tree.insert(8);
+// // tree.inOrderTraverse((item => console.log(item))); //中序遍历
+// // tree.preOrderTraverse((item => console.log(item))); //先序遍历
 tree.postOrderTraverse((item => console.log(item)))// 后序遍历
