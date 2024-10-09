@@ -15,3 +15,5 @@ package-lock.json
 *.ntvs*
 *.njsproj
 *.sln
+数据结构/OD
+test/

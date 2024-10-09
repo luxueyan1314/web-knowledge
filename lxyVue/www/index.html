@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
-  <header>
-    <title>vue原理</title>
-  </header>
-  <body>
-    <button id="handleNode">按我改变节点</button>
-    <div id="container">
-      <div id="view"></div>
-    </div>
-    <script src="xvni/bundle.js"></script> 
-  </body>
+<header>
+  <title>vue原理</title>
+</header>
+
+<body>
+  <button id="handleNode">按我改变节点</button>
+  <div id="container">
+    <div id="view"></div>
+    <p>姓名: <span>{{name}}</span></p>
+    <p>年龄: <span>{{age}}</span></p>
+    <input v-model="job" placeholder="请输入工作" type="text">
+    <p>工作：{{job}}</p>
+  </div>
+  <script src="xvni/bundle.js"></script>
+
+</body>
 </html>

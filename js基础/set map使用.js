@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html>
 
-<head>
-    <title>set map使用 </title>
-</head>
-
-<body>
-  <script>
     // set使用 开始===================
     let set = new Set()
     set.add(1)
@@ -120,7 +112,6 @@
    let weakmap = new WeakMap()
    let obj = {'name': 1}
    weakmap.set(obj, 'content')
-   console.log(weakmap)
+   console.log(weakmap.get(obj))
     // WeakMap使用 结束============
-  </script>
-</body>
+

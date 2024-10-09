@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>文件切片下载和上传</title>
+  </head>
+  <body>
+    <form action="upload.php" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" />
+      <input type="submit" value="上传" />
+    </form>
+  </body>
+  <script>
+    // 切片上传文件
+    const file = document.querySelector('input[type="file"]');
+    file.addEventListener('change', function () {
+      let selectFile = file.files[0];
+      // 计算切片大小
+      const SIZE = 1024 * 1024; // 1M
+      const total = selectFile.size;
+      const totalChunks = Math.ceil(total / SIZE);
+      const { name, type, lastModified, lastModifiedDate } = selectFile;
+      // 创建formData对象，用于存储文件切片信息
+      const formData = new FormData();
+      formData.append('file', selectFile);
+      formData.append('totalChunks', totalChunks);
+      // 循环上传切片
+      for(let chunkNum = 0; chunkNum < totalChunks; chunkNum++){
+        const start = chunkNum * SIZE;
+        const end = Math.min(start + SIZE, total);
+        const chunk = selectFile.slice(start, end);
+        formData.append(`chunk-${chunkNum}`, chunk, name);
+      }
+      // 查看formData对象的内容
+      for (let key of formData.keys()) {
+        console.log(key, formData.get(key));
+      }
+      // 上传文件
+      fetch('upload.php', {
+        method: 'POST',
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((res) => {
+          console.log(res);
+        });
+    });
+    /// 切片下载文件
+    function downloadFile() {
+      fetch('download.php')
+        .then(response => response.json())
+        .then(data => {
+          const { totalChunks, size } = data;
+
+          let downloadedChunks = 0;
+          let chunks = new Array(totalChunks);
+          for (let i = 0; i < totalChunks; i++) {
+            fetch(`download.php?chunk=${i}`)
+              .then(response => response.blob())
+              .then(blob => {
+                downloadedChunks++;
+                chunks[i] = blob;
+                if(downloadedChunks === totalChunks){
+                  const blob = new Blob(chunks);
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = 'file';
+                  a.click();
+                }
+              });
+            }
+        });
+    }
+    
+  </script>
+</html>
